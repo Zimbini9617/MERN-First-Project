@@ -6,6 +6,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
+
 const router = require('./routes/userRoutes');
 
 //get, post, put, delete
@@ -26,4 +27,4 @@ mongoose
     console.log(err);
   });
 
-app.use('/', router)
+app.use('/', router);
