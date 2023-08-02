@@ -4,7 +4,7 @@ const AllPost = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const getData = async () => {
-    const response = await fetch('http://localhost:8000');
+    const response = await fetch('http://localhost:8080');
 
     const result = await response.json();
     if (!response.ok) {
@@ -17,25 +17,28 @@ const AllPost = () => {
 
   useEffect(() => {
     getData();
-  });
-
+  }, []);
+  
+  
   const handleDelete = async (id) => {
-    const response = await fetch(`http://localhost:8000/${id}`, {
+    const response = await fetch(`http://localhost:8080/${id}`, {
       method: 'DELETE',
     });
-    const result = response.json();
-
+  
+    const result = await response.json(); // Await the response.json()
+  
     if (!response.ok) {
       setError(result.message);
+    } else {
+      setError('Deleted Successfully');
     }
-    if (response.ok) {
-      setError('Deleted Sucessfully');
-    }
+  
     setTimeout(() => {
       setError('');
       getData();
     }, 1000);
   };
+  
   return (
     <div>
       <div className="bg-red-800 text-center text-white font-bold uppercase">

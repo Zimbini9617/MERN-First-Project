@@ -23,38 +23,40 @@ const NewPost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('http://localhost:8000/', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      console.log(result.message);
-      setError(result.message);
-    }
-    if (response.ok) {
-      console.log(result);
-      setError('Data Added');
-      setTimeout(() => {
-        setError('');
-      }, 1000);
-      setUserData({
-        name: '',
-        email: '',
-        age: '',
+    try {
+      const response = await fetch('http://localhost:8080/', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      navigate('/all-post');
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.message);
+      } else {
+        setError('Data Added');
+        setTimeout(() => {
+          setError('');
+        }, 1000);
+        setUserData({
+          name: '',
+          email: '',
+          age: '',
+        });
+        navigate('/all-post');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again later.');
     }
   };
+
   return (
     <div className='container mx-auto flex flex-col items-center justify-center h-full'>
       <div className='text-center mb-4'>
-      <h1 className='font-bold font-mono text-2xl'>ADD USER INFORMATION:</h1>
+        <h1 className='font-bold font-mono text-2xl'>ADD USER INFORMATION:</h1>
       </div>
       <form className='bg-gray-300 border border-gray-700 rounded-lg shadow-md px-8 pt-6 pb-8 mb-4 w-96' onSubmit={handleSubmit}>
         <div className='mb-3'>
@@ -75,10 +77,10 @@ const NewPost = () => {
         <div className='text-center'>
           <button type='submit' className='px-4 py-2 bg-green-950 hover:bg-green-500 text-white rounded-lg border-2 border-white'>SUBMIT</button>
         </div>
+        {error && <div className="text-red-600 text-center mt-4">{error}</div>}
       </form>
-      
     </div>
-  )
-}
+  );
+};
 
 export default NewPost;
